@@ -1,0 +1,2 @@
+# Di1610: the back channel must not be read (see docs/PROTOCOL.md#transport).
+0x0686 0x400d unidir

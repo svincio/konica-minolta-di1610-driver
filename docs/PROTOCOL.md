@@ -87,7 +87,8 @@ macOS CUPS `usb` backend reads every 250 ms, and data still in flight while the 
 moving gets corrupted: pages larger than a few tens of KiB print fine for a few cm, then
 turn into noise, and sometimes the firmware stops with `(01854) FMNEU.C`. Writing only,
 as `macos/km4usb.c` does, prints everything correctly. Pages up to 650 KiB of JBIG data
-have been printed this way.
+have been printed this way. On Linux the stock CUPS `usb` backend
+works once the `unidir` quirk (`linux/di1610.usb-quirks`) turns its back-channel reads off.
 
 After a corrupted job the printer must be power-cycled before it accepts new jobs.
 
