@@ -1,0 +1,59 @@
+*PPD-Adobe: "4.3"
+*FormatVersion: "4.3"
+*FileVersion: "1.0"
+*LanguageVersion: English
+*LanguageEncoding: ISOLatin1
+*PCFileName: "DI1610.PPD"
+*Manufacturer: "KONICA MINOLTA"
+*Product: "(Di1610)"
+*ModelName: "KONICA MINOLTA Di1610"
+*ShortNickName: "KONICA MINOLTA Di1610"
+*NickName: "KONICA MINOLTA Di1610 (rastertokm4)"
+*1284DeviceID: "MFG:KONICA MINOLTA;CMD:GDI;MDL:Di1610;CLS:PRINTER;"
+*PSVersion: "(3010.000) 0"
+*LanguageLevel: "3"
+*ColorDevice: False
+*DefaultColorSpace: Gray
+*FileSystem: False
+*Throughput: "16"
+*LandscapeOrientation: Plus90
+*TTRasterizer: Type42
+*cupsVersion: 2.3
+*cupsModelNumber: 0
+*cupsManualCopies: True
+*cupsFilter2: "application/vnd.cups-raster application/vnd.km4-gdi 100 /Library/Printers/Di1610/Filter/rastertokm4"
+
+*OpenUI *PageSize/Media Size: PickOne
+*OrderDependency: 10 AnySetup *PageSize
+*DefaultPageSize: A4
+*PageSize A4/A4: "<</PageSize[595 842]/ImagingBBox null>>setpagedevice"
+*CloseUI: *PageSize
+
+*OpenUI *PageRegion/Media Size: PickOne
+*OrderDependency: 10 AnySetup *PageRegion
+*DefaultPageRegion: A4
+*PageRegion A4/A4: "<</PageSize[595 842]/ImagingBBox null>>setpagedevice"
+*CloseUI: *PageRegion
+
+*DefaultImageableArea: A4
+*ImageableArea A4/A4: "5.76 5.76 589.24 836.24"
+*DefaultPaperDimension: A4
+*PaperDimension A4/A4: "595 842"
+
+*OpenUI *Resolution/Resolution: PickOne
+*OrderDependency: 20 AnySetup *Resolution
+*DefaultResolution: 600dpi
+*Resolution 600dpi/600 DPI: "<</HWResolution[600 600]/cupsBitsPerColor 8/cupsColorSpace 18/cupsColorOrder 0>>setpagedevice"
+*Resolution 300dpi/300 DPI: "<</HWResolution[300 300]/cupsBitsPerColor 8/cupsColorSpace 18/cupsColorOrder 0>>setpagedevice"
+*CloseUI: *Resolution
+
+*OpenUI *InputSlot/Media Source: PickOne
+*OrderDependency: 30 AnySetup *InputSlot
+*DefaultInputSlot: Auto
+*InputSlot Auto/Automatic: "<</MediaPosition 0>>setpagedevice"
+*InputSlot Tray1/Tray 1: "<</MediaPosition 1>>setpagedevice"
+*InputSlot Bypass/Bypass Tray: "<</MediaPosition 6>>setpagedevice"
+*CloseUI: *InputSlot
+
+*DefaultFont: Courier
+*Font Courier: Standard "(002.004S)" Standard ROM
