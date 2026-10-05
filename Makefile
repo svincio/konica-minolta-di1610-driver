@@ -11,38 +11,14 @@ JBIG_VER = 2.1
 JBIG_URL = https://www.cl.cam.ac.uk/~mgk25/jbigkit/download/jbigkit-$(JBIG_VER).tar.gz
 JBIG_SHA = de7106b6bfaf495d6865c7dd7ac6ca1381bd12e0d81405ea81e7f2167263d932
 JBIG     = build/jbigkit-$(JBIG_VER)
-QUEUE    = Di1610
 
 ifeq ($(shell uname),Linux)
 # Linux: the stock CUPS usb backend, with the back channel turned off by the "unidir" quirk.
-FILTER = /usr/lib/cups/filter/rastertokm4
-QUIRKS = /usr/share/cups/usb/di1610.usb-quirks
-
+OS = linux
 all: build/rastertokm4
-
-build/Di1610.ppd: ppd/Di1610.ppd
-	mkdir -p build
-	sed 's|/Library/Printers/Di1610/Filter/||' $< > $@
-
-install: build/rastertokm4 build/Di1610.ppd
-	install -D -m 755 build/rastertokm4 $(FILTER)
-	install -D -m 644 linux/di1610.usb-quirks $(QUIRKS)
-	uri=$$(lpinfo --include-schemes usb -v | awk '/usb:\/\/KONICA/ {print $$2; exit}'); \
-	test -n "$$uri" || { echo "Di1610 not found on USB: turn it on and retry"; exit 1; }; \
-	lpadmin -p $(QUEUE) -D "KONICA MINOLTA Di1610" -E -v "$$uri" -P build/Di1610.ppd \
-	        -o printer-error-policy=retry-job
-
-uninstall:
-	-lpadmin -x $(QUEUE)
-	rm -f $(FILTER) $(QUIRKS)
-
 else
-USB  ?= $(shell brew --prefix libusb 2>/dev/null)
-DEST  = /Library/Printers/Di1610
-LABEL = io.github.svincio.di1610.km4usb
-PLIST = /Library/LaunchDaemons/$(LABEL).plist
-URI   = socket://127.0.0.1:9101/?snmp=false
-
+OS = macos
+USB ?= $(shell brew --prefix libusb 2>/dev/null)
 all: build/rastertokm4 build/km4usb
 
 # libusb is linked statically: no runtime dependency on Homebrew.
@@ -51,23 +27,14 @@ build/km4usb: macos/km4usb.c
 	mkdir -p build
 	cc -O2 -Wall -I$(USB)/include/libusb-1.0 -o $@ macos/km4usb.c $(USB)/lib/libusb-1.0.a \
 	   -lobjc -framework IOKit -framework CoreFoundation -framework Security
+endif
 
-install: build/rastertokm4 build/km4usb
-	install -d -o root -g wheel -m 755 $(DEST)/Filter $(DEST)/PPDs $(DEST)/bin
-	install -o root -g wheel -m 555 build/rastertokm4 $(DEST)/Filter/
-	install -o root -g wheel -m 555 build/km4usb $(DEST)/bin/
-	install -o root -g wheel -m 644 ppd/Di1610.ppd $(DEST)/PPDs/
-	install -o root -g wheel -m 644 macos/$(LABEL).plist $(PLIST)
-	-launchctl bootout system $(PLIST) 2>/dev/null
-	launchctl bootstrap system $(PLIST)
-	lpadmin -p $(QUEUE) -D "KONICA MINOLTA Di1610" -E -v '$(URI)' -P $(DEST)/PPDs/Di1610.ppd \
-	        -o printer-error-policy=retry-job
+# The install logic lives in <os>/install.sh, also used by the prebuilt release archives.
+install: all
+	sh $(OS)/install.sh
 
 uninstall:
-	-lpadmin -x $(QUEUE)
-	-launchctl bootout system $(PLIST)
-	rm -rf $(DEST) $(PLIST)
-endif
+	sh $(OS)/install.sh uninstall
 
 $(JBIG)/libjbig/libjbig.a:
 	mkdir -p build

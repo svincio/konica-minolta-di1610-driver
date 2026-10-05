@@ -1,0 +1,69 @@
+# Build, test and publish prebuilt archives when a version tag (v*) is pushed.
+# Tags with a "-" (e.g. v1.0.0-rc1) are published as pre-releases.
+name: release
+
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: write
+
+jobs:
+  macos:
+    strategy:
+      matrix:
+        include:
+          - { runner: macos-15,       platform: macos-arm64 }
+          - { runner: macos-15-intel, platform: macos-x86_64 }
+    runs-on: ${{ matrix.runner }}
+    env:
+      MACOSX_DEPLOYMENT_TARGET: '13.0'
+    steps:
+      - uses: actions/checkout@v4
+      - run: brew install libusb
+      - run: make && make test
+      - run: sh tools/package.sh "$GITHUB_REF_NAME" ${{ matrix.platform }}
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.platform }}
+          path: dist/*.tar.gz
+
+  linux:
+    strategy:
+      matrix:
+        include:
+          - { runner: ubuntu-24.04-arm, platform: linux-arm64 }
+          - { runner: ubuntu-24.04,     platform: linux-x86_64 }
+    runs-on: ${{ matrix.runner }}
+    # Built on Debian 12 (oldest glibc we target): runs on Debian 12+ and Raspberry Pi OS Bookworm/Trixie.
+    container: debian:bookworm
+    steps:
+      - run: |
+          apt-get update
+          apt-get install -y --no-install-recommends build-essential libcups2-dev curl ca-certificates perl python3 git
+      - uses: actions/checkout@v4
+      - run: |
+          git config --global --add safe.directory "$GITHUB_WORKSPACE"
+          make && make test
+      - run: sh tools/package.sh "$GITHUB_REF_NAME" ${{ matrix.platform }}
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.platform }}
+          path: dist/*.tar.gz
+
+  release:
+    needs: [macos, linux]
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: dist
+          merge-multiple: true
+      - run: cd dist && sha256sum *.tar.gz > SHA256SUMS
+      - env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          pre=""; case "$GITHUB_REF_NAME" in *-*) pre=--prerelease ;; esac
+          gh release create "$GITHUB_REF_NAME" dist/* -R "$GITHUB_REPOSITORY" \
+             --title "$GITHUB_REF_NAME" --generate-notes $pre

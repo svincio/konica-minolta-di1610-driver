@@ -3,3 +3,4 @@ __pycache__/
 .DS_Store
 # The original Windows driver is Konica Minolta's copyrighted software: never commit it.
 /Di1610bh160Vista32G108T100*
+/dist/

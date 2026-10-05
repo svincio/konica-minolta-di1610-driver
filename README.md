@@ -56,6 +56,36 @@ for each job on a port that listens on `127.0.0.1` only.
 
 ## Install
 
+### Prebuilt archives (no compiler needed)
+
+Download the archive for your system from the
+[Releases](https://github.com/svincio/konica-minolta-di1610-driver/releases) page:
+
+| Archive | System |
+|---|---|
+| `macos-arm64` | Mac with Apple Silicon |
+| `macos-x86_64` | Mac with Intel CPU |
+| `linux-arm64` | Raspberry Pi (3B+ or later) with a **64-bit** OS, other ARM64 Linux |
+| `linux-x86_64` | PC Linux |
+
+Then, with the printer on and connected via USB:
+
+```sh
+tar -xzf konica-minolta-di1610-driver-*.tar.gz
+cd konica-minolta-di1610-driver-*/
+sudo sh macos/install.sh                               # macOS
+sudo apt install cups && sudo sh linux/install.sh      # Linux (then reboot once, see below)
+```
+
+To uninstall: `sudo sh macos/install.sh uninstall` (or `linux/install.sh uninstall`).
+
+* The macOS binaries are **not signed by Apple**. The install script removes the
+  download-quarantine flag. They are built for macOS 13 or later, but only tested on macOS 27.
+* The Linux binaries are built on Debian 12, so they run on Debian 12+ and on Raspberry Pi OS
+  Bookworm and Trixie. They are 64-bit only: on a 32-bit OS, build from source.
+
+### macOS from source
+
 1. Install the Xcode Command Line Tools and Homebrew's libusb:
    ```sh
    xcode-select --install
@@ -85,7 +115,7 @@ for each job on a port that listens on `127.0.0.1` only.
 `usb://` queue, which uses the problematic backend. The queue made by `make install` is the
 right one. If you had already created one, remove it in System Settings.
 
-### Linux
+### Linux from source
 
 Tested on a **Raspberry Pi 3B+** with **Raspberry Pi OS Lite 64-bit (Debian 13 trixie)**,
 CUPS 2.4.10 and cups-filters 1.28.17. Other Debian-based distributions should work the same.
@@ -190,7 +220,21 @@ stampante GDI per cui non è mai uscito un driver per Mac o Linux. Il protocollo
 ricavato dal driver Windows ufficiale. È stato provato su **macOS 27.0.1, Apple Silicon e
 CUPS 2.3.4**, con **una sola** stampante collegata tramite dock USB-C.
 
-**Installazione**
+**Archivi pronti, senza compilare**
+
+Dalla pagina [Releases](https://github.com/svincio/konica-minolta-di1610-driver/releases) scarica
+l'archivio giusto: `macos-arm64` (Mac Apple Silicon), `macos-x86_64` (Mac Intel),
+`linux-arm64` (Raspberry Pi con sistema a 64 bit) o `linux-x86_64`. Poi:
+
+```sh
+tar -xzf konica-minolta-di1610-driver-*.tar.gz && cd konica-minolta-di1610-driver-*/
+sudo sh macos/install.sh                               # macOS
+sudo apt install cups && sudo sh linux/install.sh      # Linux, poi un riavvio
+```
+
+I binari macOS non sono firmati da Apple: lo script toglie la quarantena del download.
+
+**Installazione dai sorgenti**
 
 ```sh
 xcode-select --install && brew install libusb
