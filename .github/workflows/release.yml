@@ -14,17 +14,17 @@ jobs:
     strategy:
       matrix:
         include:
-          - { runner: macos-15,       platform: macos-arm64 }
-          - { runner: macos-15-intel, platform: macos-x86_64 }
+          - { runner: macos-15,       platform: macos-arm64,  min_macos: '15.0' }
+          - { runner: macos-15-intel, platform: macos-x86_64, min_macos: '14.0' }
     runs-on: ${{ matrix.runner }}
     env:
-      MACOSX_DEPLOYMENT_TARGET: '13.0'
+      MACOSX_DEPLOYMENT_TARGET: ${{ matrix.min_macos }}   # = Homebrew libusb bottle target
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - run: brew install libusb
       - run: make && make test
       - run: sh tools/package.sh "$GITHUB_REF_NAME" ${{ matrix.platform }}
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: ${{ matrix.platform }}
           path: dist/*.tar.gz
@@ -42,12 +42,12 @@ jobs:
       - run: |
           apt-get update
           apt-get install -y --no-install-recommends build-essential libcups2-dev curl ca-certificates perl python3 git
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - run: |
           git config --global --add safe.directory "$GITHUB_WORKSPACE"
           make && make test
       - run: sh tools/package.sh "$GITHUB_REF_NAME" ${{ matrix.platform }}
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: ${{ matrix.platform }}
           path: dist/*.tar.gz
@@ -56,7 +56,7 @@ jobs:
     needs: [macos, linux]
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v8
         with:
           path: dist
           merge-multiple: true

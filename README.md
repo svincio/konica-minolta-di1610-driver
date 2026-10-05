@@ -80,7 +80,7 @@ sudo apt install cups && sudo sh linux/install.sh      # Linux (then reboot once
 To uninstall: `sudo sh macos/install.sh uninstall` (or `linux/install.sh uninstall`).
 
 * The macOS binaries are **not signed by Apple**. The install script removes the
-  download-quarantine flag. They are built for macOS 13 or later, but only tested on macOS 27.
+  download-quarantine flag. They need macOS 15+ (Apple Silicon) or 14+ (Intel), the minimum of the bundled Homebrew libusb; tested only on macOS 27.
 * The Linux binaries are built on Debian 12, so they run on Debian 12+ and on Raspberry Pi OS
   Bookworm and Trixie. They are 64-bit only: on a 32-bit OS, build from source.
 
