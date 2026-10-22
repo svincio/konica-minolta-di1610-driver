@@ -133,6 +133,10 @@ On Linux the standard CUPS `usb://` backend is used: `make install` adds a USB q
 (`/usr/share/cups/usb/di1610.usb-quirks`, `unidir`) that turns off the back-channel reads.
 The queue is named **Di1610**; `make install` uses `lpinfo` to find its `usb://` URI.
 
+Distribution packagers: `make SYSTEM_JBIG=1 && make test SYSTEM_JBIG=1 && make install-pkg DESTDIR=...`
+uses the system jbigkit (`libjbig-dev`, `jbigkit-bin`), downloads nothing and creates no print queue.
+Packaging files are in [packaging/](packaging/SUBMIT.md).
+
 **Reboot once after installing CUPS.** `apt install cups` pulls in `colord`, which cannot
 start until the system is rebooted; meanwhile every page waits for two 25 s D-Bus timeouts
 (`gstoraster`, "Failed to send: org.freedesktop.DBus.Error.NoReply" in the CUPS log).

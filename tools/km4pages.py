@@ -5,7 +5,7 @@ usage: km4pages.py FILE..."""
 import os, shutil, subprocess, sys
 
 ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..')
-JBG = os.path.join(ROOT, 'build/jbigkit-2.1/pbmtools/jbgtopbm')
+JBG = os.environ.get('JBGTOPBM') or os.path.join(ROOT, 'build/jbigkit-2.1/pbmtools/jbgtopbm')
 OUT = os.path.join(ROOT, 'build/pages')
 HDR = bytes.fromhex('010525000000') + b'\xff' * 12      # start of every page header
 

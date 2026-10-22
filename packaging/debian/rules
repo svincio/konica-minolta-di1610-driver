@@ -1,0 +1,7 @@
+#!/usr/bin/make -f
+export SYSTEM_JBIG = 1
+%:
+	dh $@
+
+override_dh_auto_install:
+	$(MAKE) install-pkg DESTDIR=$(CURDIR)/debian/printer-driver-di1610 DOCDIR=/usr/share/doc/printer-driver-di1610

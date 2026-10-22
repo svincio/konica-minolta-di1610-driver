@@ -1,0 +1,20 @@
+Source: konica-minolta-di1610-driver
+Section: graphics
+Priority: optional
+Maintainer: Simone Vincenzi <2727861+svincio@users.noreply.github.com>
+Build-Depends: debhelper-compat (= 13), libcups2-dev, libjbig-dev, jbigkit-bin <!nocheck>, python3 <!nocheck>
+Standards-Version: 4.7.0
+Homepage: https://github.com/svincio/konica-minolta-di1610-driver
+Rules-Requires-Root: no
+
+Package: printer-driver-di1610
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, cups
+Description: CUPS driver for the KONICA MINOLTA (Minolta) Dialta Di1610
+ Unofficial driver for the Di1610, a host-based GDI laser printer/copier for
+ which the manufacturer never released a Linux driver. The KM4 protocol was
+ reverse-engineered from the Windows driver.
+ .
+ Includes the rastertokm4 CUPS filter (halftone, JBIG1 compression, KM4
+ framing), the PPD and a CUPS USB quirk that disables the back channel the
+ printer cannot handle. A4 only, 600 and 300 dpi; the scanner is not supported.

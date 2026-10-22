@@ -1,0 +1,27 @@
+# Maintainer: Simone Vincenzi <2727861+svincio@users.noreply.github.com>
+pkgname=konica-minolta-di1610-driver
+pkgver=1.1.0
+pkgrel=1
+pkgdesc='Unofficial CUPS driver for the KONICA MINOLTA (Minolta) Dialta Di1610 GDI printer'
+arch=(x86_64 aarch64)
+url='https://github.com/svincio/konica-minolta-di1610-driver'
+license=(GPL-2.0-or-later)
+depends=(cups libjbig)
+makedepends=(python jbigkit)
+source=("$pkgname-$pkgver.tar.gz::$url/archive/refs/tags/v$pkgver.tar.gz")
+sha256sums=('SKIP') # replace with `makepkg -g` once the v1.1.0 tag exists
+
+build() {
+  cd "$pkgname-$pkgver"
+  make SYSTEM_JBIG=1
+}
+
+check() {
+  cd "$pkgname-$pkgver"
+  make test SYSTEM_JBIG=1
+}
+
+package() {
+  cd "$pkgname-$pkgver"
+  make install-pkg SYSTEM_JBIG=1 DESTDIR="$pkgdir" CUPS_SERVERBIN=/usr/lib/cups CUPS_DATADIR=/usr/share/cups
+}
