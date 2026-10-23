@@ -6,10 +6,10 @@ pkgdesc='Unofficial CUPS driver for the KONICA MINOLTA (Minolta) Dialta Di1610 G
 arch=(x86_64 aarch64)
 url='https://github.com/svincio/konica-minolta-di1610-driver'
 license=(GPL-2.0-or-later)
-depends=(cups libjbig)
-makedepends=(python jbigkit)
+depends=(cups jbigkit)
+makedepends=(python)
 source=("$pkgname-$pkgver.tar.gz::$url/archive/refs/tags/v$pkgver.tar.gz")
-sha256sums=('SKIP') # replace with `makepkg -g` once the v1.1.0 tag exists
+sha256sums=('a65fa53bf85cdcee0a19a45994cdd94ae95cdadee88d3fcc759eabe7738bd18f')
 
 build() {
   cd "$pkgname-$pkgver"
